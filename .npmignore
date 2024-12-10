@@ -1,0 +1,10 @@
+.husky/
+coverage/
+src/
+test/
+/.prettierignore
+/.prettierrc
+/jest.config.js
+/tsconfig.build.json
+/tsconfig.json
+/webpack.config.js

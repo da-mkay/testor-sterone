@@ -1,0 +1,4 @@
+node_modules
+dist/*
+!dist/testor.js
+.DS_Store
