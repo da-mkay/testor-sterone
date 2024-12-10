@@ -1,4 +1,4 @@
 node_modules
 dist/*
-!dist/testor.js
+!dist/testor-sterone.js
 .DS_Store

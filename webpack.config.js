@@ -22,7 +22,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
-        filename: 'testor.js',
+        filename: 'testor-sterone.js',
         path: path.resolve(__dirname, 'dist'),
     },
 };

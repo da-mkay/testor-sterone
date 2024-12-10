@@ -1,6 +1,6 @@
 {
     "name": "testor-sterone",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Test HDDs for failures.",
     "author": "da-mkay (https://github.com/da-mkay)",
     "license": "MIT",
@@ -25,7 +25,7 @@
         "lint-staged": "lint-staged"
     },
     "bin": {
-        "testor": "dist/testor.js"
+        "testor-sterone": "dist/testor-sterone.js"
     },
     "lint-staged": {
         "**/*": "prettier --write --ignore-unknown"

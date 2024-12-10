@@ -21,7 +21,7 @@ Then, to install testor-sterone, run:
 $ npm i -g testor-sterone
 ```
 
-Alternatively you can download the `dist/testor.js` file and run it directly using NodeJS.
+Alternatively you can download the `dist/testor-sterone.js` file and run it directly using NodeJS.
 
 ## Requirements
 
@@ -42,10 +42,10 @@ At first we look which devices are available:
 
 ```
 $ # If testor-sterone was installed via npm:
-$ sudo testor devices
+$ sudo testor-sterone devices
 
-$ # If you downloaded testor.js manually:
-$ sudo node testor.js devices
+$ # If you downloaded testor-sterone.js manually:
+$ sudo node testor-sterone.js devices
 ```
 
 The output will look like this
@@ -74,7 +74,7 @@ Let's test the device `/dev/sdb`:
 In the following snippet we perform a write-test followed by a read-test.
 
 ```
-$ sudo testor test /dev/sdb
+$ sudo testor-sterone test /dev/sdb
 -------------------------------------------------------------------------------
 Device: WDC_WD20EARX-00PASB0
 Serial: WD-WCABCD123456
@@ -96,7 +96,7 @@ Writing test data ...
 And here we perform a cross-test.
 
 ```
-$ sudo testor test /dev/sdb --mode x
+$ sudo testor-sterone test /dev/sdb --mode x
 -------------------------------------------------------------------------------
 Device: WDC_WD20EARX-00PASB0
 Serial: WD-WCABCD123456
@@ -138,7 +138,7 @@ To compile the typescript code during development:
 $ npm run build
 ```
 
-To create a bundle (`dist/testor.js`):
+To create a bundle (`dist/testor-sterone.js`):
 
 ```
 $ npm run bundle
