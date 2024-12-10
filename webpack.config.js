@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     entry: './src/bin.ts',
@@ -25,4 +26,5 @@ module.exports = {
         filename: 'testor-sterone.js',
         path: path.resolve(__dirname, 'dist'),
     },
+    plugins: [new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true })],
 };
