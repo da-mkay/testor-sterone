@@ -175,6 +175,39 @@ describe('CliArgs', () => {
             cargs.parse(['myMode']);
             expect(cargs['options'].myMode.foo).toEqual('SomeOtherDefault');
         });
+
+        test('should call parse functions before calling validate functions', async () => {
+            // Ensuring that parse functions are called before validate functions,
+            // we can access parsed values from within validate functions.
+            const parse = jest.fn(() => 'Foo');
+            const validate = jest.fn(() => {
+                expect(parse).toHaveBeenCalledTimes(3);
+                expect(parse.mock.calls[0]).toEqual(['pOS']);
+                expect(parse.mock.calls[1]).toEqual(['fOO']);
+                expect(parse.mock.calls[2]).toEqual(['zOO']);
+                return undefined;
+            });
+            const cargs = new CliArgs({
+                myMode: {
+                    positionals: {
+                        0: {
+                            name: 'something',
+                            parse,
+                            validate,
+                        },
+                    },
+                    options: {
+                        foo: {
+                            parse,
+                            validate,
+                        },
+                        zoo: { parse },
+                    },
+                },
+            });
+            cargs.parse(['myMode', 'pOS', '--foo', 'fOO', '--zoo', 'zOO']);
+            expect(validate).toHaveBeenCalledTimes(2);
+        });
     });
 
     describe('getOption', () => {

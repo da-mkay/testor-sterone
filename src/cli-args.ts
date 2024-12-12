@@ -1,13 +1,15 @@
+export type ValidateFunction<T> = (value: T) => string | undefined;
+
 export interface CliOptionConfig<T> {
     short?: string;
     parse: (value: string) => T;
     default?: T | (() => T);
-    validate?: (value: T) => string | undefined;
+    validate?: ValidateFunction<T>;
 }
 export interface CliPositionalConfig<T> {
     name: string;
     parse: (value: string) => T;
-    validate?: (value: T) => string | undefined;
+    validate?: ValidateFunction<T>;
 }
 
 export interface CliArgsConfig {
@@ -104,19 +106,17 @@ export class CliArgs<T extends CliArgsConfig> {
         }
         this.positionals[mode] = {};
         this.options[mode] = {};
+        const positionalValuesToValidate: [any, ValidateFunction<any>][] = [];
         for (let i = 0; i < positions.length; i++) {
             const value = this.config[mode].positionals[i].parse(positionals[i]);
             if (this.config[mode].positionals[i].validate) {
-                const error = this.config[mode].positionals[i].validate(value);
-                if (error) {
-                    throw new InvalidPositionalArgumentError(error);
-                }
+                positionalValuesToValidate.push([value, this.config[mode].positionals[i].validate]);
             }
             this.positionals[mode][i] = value;
         }
         const longOptionNames = Object.keys(this.config[mode].options) as (keyof CliOptions<T>[typeof mode] & string)[];
-        while (options.length > 0) {
-            const opt = options.shift();
+        const optionValuesToValidate: [any, ValidateFunction<any>][] = [];
+        for (const opt of options) {
             const i = opt.indexOf('=');
             const name = opt.substring(0, i);
             let value: any = opt.substring(i + 1);
@@ -130,12 +130,21 @@ export class CliArgs<T extends CliArgsConfig> {
                 value = this.config[mode].options[lon].parse(value);
             }
             if (this.config[mode].options[lon].validate) {
-                const error = this.config[mode].options[lon].validate(value);
-                if (error) {
-                    throw new InvalidOptionArgumentError(error);
-                }
+                optionValuesToValidate.push([value, this.config[mode].options[lon].validate]);
             }
             this.options[mode][lon] = value;
+        }
+        for (const [value, validate] of positionalValuesToValidate) {
+            const error = validate(value);
+            if (error) {
+                throw new InvalidPositionalArgumentError(error);
+            }
+        }
+        for (const [value, validate] of optionValuesToValidate) {
+            const error = validate(value);
+            if (error) {
+                throw new InvalidOptionArgumentError(error);
+            }
         }
         for (const longName of longOptionNames) {
             const oc = this.config[mode].options[longName];
