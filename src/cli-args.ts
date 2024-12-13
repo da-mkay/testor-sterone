@@ -134,6 +134,12 @@ export class CliArgs<T extends CliArgsConfig> {
             }
             this.options[mode][lon] = value;
         }
+        for (const longName of longOptionNames) {
+            const oc = this.config[mode].options[longName];
+            if (this.options[mode][longName] === undefined && oc.default !== undefined) {
+                this.options[mode][longName] = typeof oc.default === 'function' ? oc.default() : oc.default;
+            }
+        }
         for (const [value, validate] of positionalValuesToValidate) {
             const error = validate(value);
             if (error) {
@@ -144,12 +150,6 @@ export class CliArgs<T extends CliArgsConfig> {
             const error = validate(value);
             if (error) {
                 throw new InvalidOptionArgumentError(error);
-            }
-        }
-        for (const longName of longOptionNames) {
-            const oc = this.config[mode].options[longName];
-            if (this.options[mode][longName] === undefined && oc.default) {
-                this.options[mode][longName] = typeof oc.default === 'function' ? oc.default() : oc.default;
             }
         }
     }

@@ -208,6 +208,27 @@ describe('CliArgs', () => {
             cargs.parse(['myMode', 'pOS', '--foo', 'fOO', '--zoo', 'zOO']);
             expect(validate).toHaveBeenCalledTimes(2);
         });
+
+        test('should set default values before calling validate functions', async () => {
+            const parse = jest.fn(() => 'Foo');
+            const validate = jest.fn(() => {
+                expect(cargs.getOption('myMode', 'zoo')).toEqual('some-default');
+                return undefined;
+            });
+            const cargs = new CliArgs({
+                myMode: {
+                    options: {
+                        foo: {
+                            parse,
+                            validate,
+                        },
+                        zoo: { parse, default: 'some-default' },
+                    },
+                },
+            });
+            cargs.parse(['myMode', '--foo', 'fOO']);
+            expect(validate).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe('getOption', () => {
